@@ -288,7 +288,7 @@ if(oldCh && ch && (oldCh !== ch)) {
 
 * 2.1 当**oldStartVnode**或者**oldEndVnode**不存在时，**oldStartIdx**与**oldEndIdx**继续向中间靠拢，并更新对应的**oldStartVnode**与**oldEndVnode**的指向
 * 2.2 将**oldStartIdx**、**newStartIdx**、**oldEndIdx**、**newEndIdx**两两比对的过程
-> 一共会出现2*2=4种情况
+    > 一共会出现2*2=4种情况
 
     * **oldStartVnode**与**newStartVnode**符合**sameVnode**时，直接**patchVnode**，同时**oldStartIdx**与**newStartIdx**向后移一位
     * **oldEndVnode**与**newEndVnode**符合**sameVnode**时，同样进行**patchVnode**操作并将**oldEndIdx**与**newEndIdx**向前移动一位
@@ -296,7 +296,8 @@ if(oldCh && ch && (oldCh !== ch)) {
     * **oldEndVnode**与**newStartVnode**符合**sameVnode**时，将**oldEndVnode.elm**直接移动到**oldStartVnode.elm**这个节点后面，然后**oldEndIdx**向前移动一位，**newStartIdx**向后移动一位
 
 * 2.3 其他情况下
-    * 根据某一个key值，快速得从**oldKeyToIdx **种获取相同key节点的索引**idxInOld**，然后找到相同的节点
+    * 处理节点得到一个**key**与**index**索引对应的map表**oldKeyToIdx **
+    * 可以根据某一个key值，快速地从**oldKeyToIdx **中获取相同key节点的索引**idxInOld**，然后找到相同的节点
     * 如果没有找到相同的节点，则通过**createElm**创建一个新节点，并将**newStartIdx**向后移一位
     * 如果找到了节点，同时也符合**sameVnode**，则将这两个节点进行**patchVnode**，将该位置的旧节点赋值为undefined，同时将**newStartVnode.elm**插入到**oldStartVnode.elm**前面，**newStartIdx**后移一位
     * 如果不符合**sameVnode**，只能创建一个新节点插入到**parentElm**的子节点中，**newStartIdx**后移一位
@@ -305,6 +306,93 @@ if(oldCh && ch && (oldCh !== ch)) {
 4. 如果满足**newStartIdx > newEndIdx**，调用**removeVnodes**将多的旧节点批量删除
 
 ```js
+function updateChildren(parentElm, oldCh, newCh) {
+    // 新旧节点 两边的索引及节点
+    let oldStartIdx = 0;
+    let newStartIdx = 0;
+    let oldEndIdx = oldCh.length - 1;
+    let newEndIdx = newCh.length - 1;
+    let oldStartVnode = oldCh[0];
+    let newStartVnode = newCh[0];
+    let oldEndVnode = oldCh[oldEndIdx];
+    let newEndVnode = newCh[newEndIdx];
+    let oldKeyToIdx, idxInOld, elmToMove, refElm;
+
+    // 在while循环中，新旧节点两边的索引会逐渐向中间靠拢
+    while(oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
+        if(!oldStartVnode) {
+            oldStartVnode = oldCh[++oldStartIdx];
+        } else if(!oldEndVnode) {
+            oldEndVnode = oldCh[--oldEndIdx];
+        } else if(sameVnode(oldStartVnode, newStartVnode)) {
+            patchVnode(oldStartVnode, newStartVnode);
+            oldStartVnode = oldCh[++oldStartIdx];
+            newStartVnode = newCh[++newStartIdx];
+        } else if(sameVnode(oldEndVnode, newEndVnode)) {
+            patchVnode(oldEndVnode, newEndVnode);
+            oldEndVnode = oldCh[--oldEndIdx];
+            newEndVnode = newCh[--newEndIdx];
+        } else if(sameVnode(oldStartVnode, newEndVnode)) {
+            patchVnode(oldStartVnode, newEndVnode);
+            nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm));// 第三个参数什么意思？第一个参数是什么
+            oldStartVnode = oldCh[++oldStartIdx];
+            newEndVnode = newCh[--newEndIdx];
+        } else if(sameVnode(oldEndVnode, newStartVnode)) {
+            patchVnode(oldEndVnode, newStartVnode);
+            nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm);//不懂too
+            oldEndVnode = oldCh[--oldEndIdx];
+            newStartVnode = newCh[++newStartIdx];
+        } else {
+            let elmToMove = oldCh[idxInOld];
+            if(!oldKeyToIdx) oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx);
+            if(!idxInOld) {
+                createElm(newStartVnode, parentElm);
+                newStartVnode = newCh[++newStartIdx];
+            } else {
+                elmToMove = oldCh[idxInOld];
+                if (sameVnode(elmToMove, newStartVnode)) {
+                    patchVnode(elmToMove, newStartVnode);
+                    oldCh[idxInOld] = undefined;
+                    nodeOps.insertBefore(parentElm, newStartVnode.elm, oldStartVnode.elm);
+                    newStartVnode = newCh[++newStartIdx];
+                } else {
+                    createElm(newStartVnode, parentElm);
+                    newStartVnode = newCh[++newStartIdx];
+                }
+            }
+        }
+    }
+
+    if(oldStartIdx > oldEndIdx) {
+        refElm = (newCh[newEndIdx + 1]) ? newCh[newEndIdx + 1].elm : null;
+        addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx);
+    } else if(newStartIdx > newEndIdx) {
+        removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx);
+    }
+}
+// 产生key与index索引对应的一个map表
+/**
+ * [
+ *    {xx: xx, key: 'key0'},
+ *    {xx: xx, key: 'key1'},
+ *    {xx: xx, key: 'key2'}
+ * ]
+ * {
+ *    key0: 0,
+ *    key1: 1,
+ *    key2: 2    
+ * }
+ */
+createKeyToOldIdx(children, beginIdx, endIdx) {
+	let i, key;
+	const map = {};
+	for(i = beginIdx; i <= endIdx; ++i) {
+        key = children[i].key;
+        if(isDef(key)) map[key] = i;
+	}
+	return map;
+
+}
 ```
 
 
