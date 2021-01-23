@@ -1,0 +1,11 @@
+CACHE MANIFEST
+# version 2021-01-23
+
+CACHE:
+./asset/css/common.css
+./asset/css/iconfont.woff
+./src/main.js
+
+NETWORK:
+*
+
