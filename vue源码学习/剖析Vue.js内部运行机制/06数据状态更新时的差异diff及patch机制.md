@@ -284,7 +284,7 @@ if(oldCh && ch && (oldCh !== ch)) {
 
 2. **while**循环：**oldStartIdx**、**newStartIdx**、**oldEndIdx**、**newEndIdx**会逐渐向中间靠拢
 
-![新旧节点变量定义](./img/patch-节点比对1.png)
+![新旧节点变量定义](./img/patch-节点比对2.png)
 
 * 2.1 当**oldStartVnode**或者**oldEndVnode**不存在时，**oldStartIdx**与**oldEndIdx**继续向中间靠拢，并更新对应的**oldStartVnode**与**oldEndVnode**的指向
 * 2.2 将**oldStartIdx**、**newStartIdx**、**oldEndIdx**、**newEndIdx**两两比对的过程
