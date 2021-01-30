@@ -103,12 +103,12 @@ export class Dep {
             subs[i].update()
         }
     }
-    function remove(arr, item) {
-        if(arr.length) {
-            const index = arr.indexOf(item)
-            if(index > -1) {
-                return arr.splice(arr,)
-            }
+}
+ function remove(arr, item) {
+    if(arr.length) {
+        const index = arr.indexOf(item)
+        if(index > -1) {
+            return arr.splice(arr, index)
         }
     }
 }
@@ -123,7 +123,7 @@ function defineReactive (data, key, val) {
         enumberable: true,
         configurable: true,
         get: function() {
-            dep.addSub()
+            dep.depend()
             return val
         },
         set: function(newVal) {
@@ -243,7 +243,7 @@ function defineReactive (data, key, val) {
         enumberable: true,
         configurable: true,
         get: function() {
-            dep.addSub()
+            dep.depend()
             return val
         },
         set: function(newVal) {
