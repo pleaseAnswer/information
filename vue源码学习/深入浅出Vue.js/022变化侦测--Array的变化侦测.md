@@ -350,3 +350,79 @@ export default Observer {
 
 #### 9.1 获取新增元素
 
+```js
+;[
+    'push',
+    'pop',
+    'shift',
+    'unshift',
+    'splice',
+    'sort',
+    'reverse'
+].forEach(function(method) {
+  // 缓存原始方法
+  const original = arrayProto[method]
+  def(arrayMethods, method, function mutator(...args) {
+    const result = original.apply(this, args)
+    const ob = this.__ob__
+    // 获取新增的元素
+    let inserted
+    switch(method) {
+      case 'push':
+      case 'unshift':
+        inserted = args
+        break
+      case 'splice':
+        inserted = args.slice(2)
+        break
+    }
+    ob.dep.notify() // 向依赖发送消息
+    return result
+  })
+})
+```
+
+#### 9.2 使用Observer侦测新增元素
+
+> Observer将自身的实例附加到value的__ob__属性上
+
+* 在拦截器中，从`this.__ob__`上拿到Observer实例，使用`observeArray方法`侦测新增元素的变化
+
+```js
+;[
+    'push',
+    'pop',
+    'shift',
+    'unshift',
+    'splice',
+    'sort',
+    'reverse'
+].forEach(function(method) {
+  // 缓存原始方法
+  const original = arrayProto[method]
+  def(arrayMethods, method, function mutator(...args) {
+    const result = original.apply(this, args)
+    const ob = this.__ob__
+    // 获取新增的元素
+    let inserted
+    switch(method) {
+      case 'push':
+      case 'unshift':
+        inserted = args
+        break
+      case 'splice':
+        inserted = args.slice(2)
+        break
+    }
+    if(inserted) ob.observeArray(inserted) // 新增
+    ob.dep.notify()
+    return result
+  })
+})
+```
+
+### 10.关于Array
+
+> 对Array的变化侦测是通过拦截原型的方式实现的，所以有些数组操作Vuejs时拦截不到的
+
+### 11.总结
