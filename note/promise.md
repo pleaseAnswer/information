@@ -62,13 +62,29 @@ const promiseB = promiseA.then(handleFulfilled1, handleRejected1);
 const promiseC = promiseA.then(handleFulfilled2, handleRejected2);
 ```
 
-### 静态方法Promise.all(iterable)
+### 静态方法
+
+#### Promise.all(iterable)
 
 * 返回值：
     * 一个新的`promise对象`，该`promise对象`在iterable参数对象里所有的`promise对象`都成功时才会触发成功，一旦有任何一个iterable里面的`promise对象`失败则立即触发该`promise对象`的失败。
     * 该`promise对象`在触发成功状态以后，会把一个包含iterable里所有的`promise`返回值的数组作为成功回调的返回值，顺序跟iterable的顺序保持一致。
     * 若该`promise对象`触发了失败状态，它就把iterable里第一个触发失败的`promise对象`的错误信息作为它的错误信息。
 * **`Promise.all()`常被用于处理多个`promise对象`的状态集合**
+
+#### Promise.race(iterable)
+
+> 顾名思义，`Promise.race()`就是赛跑的意思，即`Promise.race([p1, p2, p3])`里面哪个结果获得的快，就返回那个结果，不管结果本身是成功状态还是失败状态。
+
+##### 模拟
+
+```js
+Promise._race = promises => new Promise((resolve, reject) => {
+  promises.forEach(promise => {
+    promise.then(resolve, reject) 
+  })
+})
+```
 
 ### Promise原型
 
@@ -91,6 +107,18 @@ const promiseC = promiseA.then(handleFulfilled2, handleRejected2);
 ##### `Promise.prototype.finally(onFinally)`
 
 * 添加一个事件处理回调于`当前promise对象`，并且在`原promise对象`解析完毕后，返回一个`新的promise对象`。回调会在`当前promise`运行完毕后被调用，无论`当前promise`的状态是`完成(fulfilled)`还是`失败(rejected)`
+
+###### 模拟
+
+```js
+Promise.prototype.finally = function(callback) {
+  let P = this.constructor;
+  return this.then(
+    value => P.resolve(callback()).then(() => value),
+    reason => P.resolve(callback()).then(() => {throw reason})
+  );
+}
+```
 
 ### 创建Promise
 
