@@ -1,4 +1,4 @@
-#### 文本复制 wx.setClipboardData
+#### 文本复制`wx.setClipboardData(object)`
 
 ```js
 var inviteName = this.data.copyData[0].url;
@@ -8,6 +8,30 @@ wx.setClipboardData({
     success: function (res) {
       this.toastComponent.showToastComponent("复制成功")
     }
+});
+```
+
+#### base64转临时url
+
+```js
+//声明文件系统
+const fs = wx.getFileSystemManager();
+//随机定义路径名称
+var times = new Date().getTime();
+var codeimg = wx.env.USER_DATA_PATH + '/' + times + '.png';
+//将base64图片写入
+fs.writeFile({
+  filePath: codeimg,
+  data: pics,
+  encoding: 'base64',
+  success: () => {
+    //写入成功了的话，新的图片路径就能用了
+    var urls = new Array(codeimg)
+    wx.previewImage({
+      //当前显示图片
+      urls,
+    })
+  }
 });
 ```
 
@@ -35,7 +59,7 @@ Page({
 })
 ```
 
-#### 人脸识别 wx.startFacialRecognitionVerify(OBJECT)
+#### 人脸识别`wx.startFacialRecognitionVerify(OBJECT)`
 
 > 验证方式：在线验证 -- 读数字 屏幕闪烁
 
@@ -57,7 +81,7 @@ wx.startFacialRecognitionVerify({
 })
 ```
 
-#### 小程序内跳转至其他小程序 wx.navigateToMiniProgram(Object object)
+#### 小程序内跳转至其他小程序`wx.navigateToMiniProgram(Object object)`
 
 ```js
 wx.navigateToMiniProgram({
@@ -65,6 +89,22 @@ wx.navigateToMiniProgram({
     path: string, // 打开的页面路径，为空则打开首页
 })
 ```
+
 #### 长按识别二维码
 
 * image标签设置**show-menu-by-longpress**属性为true
+
+#### 实现服务通知`requestSubscribeMessage`
+
+* **`tmplIds`**
+  * 需要订阅的消息模板的id的集合，一次调用最多可订阅3条消息
+  * 消息模板id在[微信公众平台(mp.weixin.qq.com)-功能-订阅消息]中配置。每个tmplId对应的模板标题需要不相同，否则会被过滤。
+
+```js
+wx.requestSubscribeMessage({
+  tmplIds: [''], 
+  success(res) {},
+  fail() {},
+  complete() {}
+})
+```
