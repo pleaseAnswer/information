@@ -4,14 +4,32 @@
 
 ### 描述
 
-> 一个 `Promise`对象代表一个在这个 promise 被创建出来时不一定已知的值。使得能够把异步操作最终的成功返回值或者失败原因和相应的处理程序关联起来。 这样使得异步方法可以像同步方法那样返回值：异步方法并不会立即返回最终的值，而是会返回一个 promise，以便在未来某个时候把值交给使用者。
+> 一个 `Promise`对象代表一个在这个`promise`被创建出来时不一定已知的值。使得能够把异步操作最终的成功返回值或者失败原因和相应的处理程序关联起来。 这样使得异步方法可以像同步方法那样返回值：**异步方法并不会立即返回最终的值，而是会返回一个`promise`，以便在未来某个时候把值交给使用者。**
 
 * **一个`Promise`必然处于以下几种状态之一**
-    * **待定`pending`**：初始状态
-    * **已兑现`fulfilled`**：意味着操作成功
-    * **已拒绝`rejected`**：意味着操作拒绝
+  * **待定`pending`**：初始状态
+  * **已兑现`fulfilled`**：意味着操作成功
+  * **已拒绝`rejected`**：意味着操作拒绝
 
 > `Promise`只能处于一种状态，且状态的改变是不可逆的，只能从pending->fulfilled|rejected
+
+### 特点
+
+1. **对象的状态不受外界影响。**状态值只会被异步结果决定，其它任何操作无法改变
+2. **状态一旦成型，就不会再变，且任何时候都可以得到这个结果。**
+
+### 缺点
+
+1. `Promise`一旦执行便无法取消
+2. 如果不设置回调函数，内部发生的错误无法在外部捕获
+3. 当处于`pending`状态时，无法得知其具体发展到哪个阶段
+
+### 优点
+
+1. 解决回调地狱问题
+2. 更好的进行错误捕获
+
+### Promise的链式调用
 
 * 因为`Promise.prototype.then`和`Promise.prototype.catch`方法返回的是`promise`，所以他们可以被链式调用
 
@@ -20,17 +38,15 @@
 
 ![链式调用](./img/promise-链式调用.png)
 
-### Promise的链式调用
-
 > 可以用`promise.then()`、`promise.catch()`和`promise.finally()`方法将进一步的操作与一个已敲定状态的`promise`关联起来。这些方法还会返回一个新生成的`promise对象`，这个对象可以被非强制性的用来做链式调用
 
 ```js
 const myPromise = 
-	(new Promise(myExcutorFunc))
-	.then(handleFulfillledA)
-	.then(handleFulfillledB)
-	.then(handleFulfillledC)
-	.catch(handleRejectedAny);
+ (new Promise(myExcutorFunc))
+ .then(handleFulfillledA)
+ .then(handleFulfillledB)
+ .then(handleFulfillledC)
+ .catch(handleRejectedAny);
 ```
 
 * 任何不是`throw`的终止都会创建一个`已决议resolved`状态，而以`throw`终止则会创建于一个`已拒绝`状态
