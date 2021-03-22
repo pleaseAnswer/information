@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+</body>
+<script>
+  {
+  function foo() {}
+  foo = 1
+  function foo() {}
+  foo = 10
+  console.log(11, foo)
+}
+console.log(111, foo)
+
+{
+  foo = 1
+  function foo() {}
+  foo = 10
+  console.log(22, foo)
+}
+console.log(222, foo)
+
+{
+  function foo() {}
+  foo = 1
+  foo = 10
+  console.log(33, foo)
+}
+console.log(333, foo)
+
+{
+  foo = 1
+  foo = 10
+  console.log(44, foo)
+}
+console.log(444, foo)
+</script>
+</html>
