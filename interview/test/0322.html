@@ -40,5 +40,67 @@ console.log(333, foo)
   console.log(44, foo)
 }
 console.log(444, foo)
+
+// 0323
+// function Hero(name) {
+//   let time = 0;
+//   let outPut = `Hi! This is ${name}`;
+//   this.kill = function(num) {
+//     let outPut2 = '';
+//     setTimeout(() => {
+//       if(num === 1) {
+//         outPut += ` Kill 1 bug`;
+//         outPut2 = ` Kill 1 bug`
+//       } else {
+//         outPut += ` Kill ${num} bugs`;
+//         outPut2 = ` Kill ${num} bugs`;
+//       }
+//       console.log(outPut2)
+//     }, time)
+//   }
+//   this.recover = function(num2) {
+//     outPut += ` Recover ${num2} bloods`;
+//   }
+//   this.sleep = function(time2) {
+//     time = time2
+//   }
+//   console.log(outPut)
+//   return outPut
+// }
+
+function Hero(name) {
+  let o = new Object();
+  o.name = name;
+  o.time = 0;
+  console.log(`Hi! This is ${o.name}`);
+  o.kill = function(bugs) {
+    if(bugs === 1) {
+      console.log(`Kill 1 bug`)
+    } else {
+      setTimeout(() => {
+        console.log(`Kill ${bugs} bugs`)
+      }, 1000 * this.time)
+    }
+    return o;
+  }
+  o.recover = function(bloods) {
+    console.log(`Recover ${bloods} bloods`)
+    return o;
+  }
+  o.sleep = function(sleepTime) {
+    o.time = sleepTime;
+    return o;
+  }
+  return o;
+}
+Hero("37er").sleep(10).kill(2);
+
+// 0324
+for(var i = 0; i < 5; i++) {
+  setTimeout(function() {
+    console.log(i)
+  }, 1000);
+  console.log(i)
+}
 </script>
 </html>

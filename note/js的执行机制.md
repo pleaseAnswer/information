@@ -34,9 +34,11 @@
 
 ### 2.1 宏任务macro-task
 
-> 整体代码script
+> 整体代码script（UIrender）
 > setTimeout
 > setInterval
+> setImmediate
+> i/o
 
 #### setTimeout
 
@@ -72,11 +74,14 @@ setTimeout(() => {
 
 > Promise
 > process.nextTick
+> mutationObserver
 
 ### 总结
 
 * 宏队列：执行每个宏队列时会先清空微任务队列
 * 微队列：微队列为空时执行宏队列
+
+> 任务队列中，在每一次事件循环中，`macrotask`只会提取一个执行，而`microtask`会一直提取，直到`microtask`队列为空。
 
 ## 栗子
 
