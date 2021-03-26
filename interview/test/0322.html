@@ -102,5 +102,12 @@ for(var i = 0; i < 5; i++) {
   }, 1000);
   console.log(i)
 }
+
+this.a = null;
+let aa = this.a;
+const bb = () => {
+  aa = {}
+}
+console.log(aa)
 </script>
 </html>
