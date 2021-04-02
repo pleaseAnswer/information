@@ -109,5 +109,58 @@ const bb = () => {
   aa = {}
 }
 console.log(aa)
+
+// 冒泡排序
+function bubble(arr) {
+  var exchange = arr.length;
+  while(exchange) {
+    var bound = exchange, exchange = 0;
+    for(let i = 0; i < bound; i++) {
+      if(arr[i] > arr[i+1]) {
+        [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+        exchange = i
+      }
+    }
+  }
+  return arr;
+}
+let arr1 = [4, 15, 8, 5, 1]
+bubble(arr1)
+
+// 插入排序
+function insert(arr) {
+  var newArr = []
+  newArr.push(arr[0])
+  for(let i = 1; i < arr.length; i++) {
+    let A = arr[i];
+    for(let j = newArr.length; j >= 0; j--) {
+      let B = arr[j]
+      if(A > B) {
+        newArr.splice(j+1, 0, A)
+        break
+      }
+      if(j === 0) newArr.unshift(A)
+    }
+  }
+  return newArr
+}
+let arr2 = [4, 15, 8, 5, 1]
+insert(arr2)
+
+// 快速排序
+function quicky(arr) {
+  if(arr.length <= 0) return arr
+  var middleIndex = Math.floor(arr.length/2)
+  var middleValue = arr.splice(middleIndex, 1)[0]
+  var leftList = [], rightList = []
+  for(var i = 0; i < arr.length; i++) {
+    let item = arr[i];
+    item < middleValue ? leftList.push(item) : rightList.push(item)
+  }
+  return quicky(leftList).concat(middleValue).concat(quicky(rightList))
+
+
+}
+
 </script>
 </html>
