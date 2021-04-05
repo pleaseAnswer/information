@@ -34,7 +34,7 @@
 ### vue的响应式原理，以及get set分别做了什么
 
 * vue在实例化时会遍历data下的属性，并通过object.defineProperty()把这些属性转为setter getter，并写入vue的实例。
-* setter的时候会收集依赖，getter的时候会触发依赖。
+* getter的时候会收集依赖，setter的时候会触发依赖。
 
 ### watch、computed、methods的区别
 
