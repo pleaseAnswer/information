@@ -125,7 +125,7 @@
 * outputDir 出口
 * lintOnSave 是否打开eslint
 * devServer.proxy 本地调试的请求代理
-* configureWebpack修改weboack
+* configureWebpack修改webpack
   * resolve.alias文件起别名
 * chainWebpack定义loader和plugin(插件)
 

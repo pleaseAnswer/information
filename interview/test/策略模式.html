@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>策略模式</title>
+</head>
+<body>
+    <script src="./validator.js"></script>
+    <script>
+        function submitForm() {
+        const validator = new Validator()
+        validator.check(this.companyName, [{
+            rule: 'isEmpty',
+            errMsg: '公司名不能为空'
+        },{
+            rule: 'maxLength: 12',
+            errMsg: '公司名不能超过12个字符'
+        }])
+        validator.check(this.payAccount, [{
+            rule: 'isEmpty',
+            errMsg: '付款卡号不能为空'
+        },{
+            rule: 'maxLength: 12',
+            errMsg: '付款卡号不能超过12个字符'
+        }])
+        let errMsg = validator.checkResult()
+        if(errMsg) {
+            alert(errMsg)
+            return
+        }
+        }
+    </script>
+    
+</body>
+</html>
