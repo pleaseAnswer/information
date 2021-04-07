@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>快速排序</title>
+</head>
+<body>
+  <script>
+    function quick(arr) {
+      if(!arr.length) return arr
+      let leftArr = [], rightArr = []
+      let middleIndex = Math.floor(arr.length/2)
+      let middleItem = arr.splice(middleIndex, 1)[0]
+      arr.map(item => {
+        item > middleItem ? rightArr.push(item) : leftArr.push(item)
+      })
+      return quick(leftArr).concat(middleItem).concat(quick(rightArr))
+    }
+    let arr3 = [12, 10, 8, 18, 1];
+    quick(arr3)
+  </script>
+  
+</body>
+</html>

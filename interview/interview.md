@@ -98,11 +98,11 @@
 
 ### 介绍vuex
 
-* vuex是一个状态管理工具，用于处理组件通讯的。有五种属性：第一个是state，vuex就是一个store，store里面存放了很多对象，state就是数据源的存放地，里面存放的数据都是响应式的，对应于vue的data；第二个是getter，对应与vue里面的computed，它是store的计算属性；mutation对应于vue里面的methods，它是改变state的唯一途径；action可用于做异步操作，但是不能直接改变state；module用于给vuex分模块。
+* vuex是一个状态管理工具，用于处理组件通讯的。有五种属性：第一个是state，vuex就是一个store，store里面存放了很多对象，state就是数据源的存放地，里面存放的数据都是响应式的，对应于vue的data；第二个是getter，对应于vue里面的computed，它是store的计算属性；mutation对应于vue里面的methods，它是改变state的唯一途径；action可用于做异步操作，但是不能直接改变state；module用于给vuex分模块。
 
 ### 为什么vuex的mutation不能做异步操作？
 
-* 每个mutation执行完后都会对应到一个新的状态更新，这样就能通过devtool去观察到状态的变更过程。如果mutation支持一部，就无法很好的进行状态的追踪，给调试带来困难。
+* 每个mutation执行完后都会对应到一个新的状态更新，这样就能通过devtool去观察到状态的变更过程。如果mutation支持异步，就无法很好的进行状态的追踪，给调试带来困难。
 
 ### ajax、axios、promise的区别
 
@@ -378,7 +378,7 @@ var deepCopy = function(obj) {
 
 ## 源码
 
-1. Object。defindeProperty()
+1. Object.defindeProperty()
 2. 依赖收集 -> 形成数据与视图一一对应的关系
    * how
    * 实现订阅者Dep，用于存放Watcher观察者
@@ -386,7 +386,7 @@ var deepCopy = function(obj) {
 3. VNode
    * VNode就是一个js对象，用js对象的属性描述当前节点的一些状态
 4. 修改data -> 视图更新
-   * setter -> Dep ->watch[queue,nextTick时触发patch] -> patch -> 视图
+   * setter -> Dep -> watch[queue,nextTick时触发patch] -> patch -> 视图
 
 ## 项目如果重构你会选择重构哪些地方？重构的方法以及必要性？
 

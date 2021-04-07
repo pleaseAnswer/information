@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>冒泡排序</title>
+</head>
+<body>
+  <script>
+    function bubble(arr) {
+      let exchange = arr.length;
+      while(exchange) {
+        let bound = exchange;
+        exchange = 0; // 记录最后一次交换位置
+        for(let i = 0; i < bound; i++) {
+          if(arr[i] > arr[i+1]) {
+            [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+            exchange = i
+          }
+        }
+      }
+      return arr
+    }
+  </script>
+  
+</body>
+</html>
